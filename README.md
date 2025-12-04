@@ -2,17 +2,24 @@
 
 ## Kelompok 4  
 - Alayavaro Rachmadia : 2410501095  
-- Panji Anu : ____________________  
-- Nama 3 : ____________________  
+- Panji Anugerah Panengah : 2410501105  
+- Rakha Abyan Hertamtama : 2410501089
+- Rizki Ramadhan : 2410501091
+- Shidqi Athalla Arka Qafriyanto : 2410501077
 
-## 🎯 Tema Project  
+## Tema Project  
 Load Balancer + 2 Backend Instance + Redis Database (Data Persistence)
 
----
 
-## 🧩 Layanan dalam Project
+## Layanan dalam Project
 1. **Backend 1 (Python Flask API)**  
-   Menyediakan endpoint API `/` yang menampilkan `container_id`, `total_visits`, dan status Redis.
+   Menyediakan endpoint / yang menampilkan:
+
+   container_id
+
+   total_visits (dari Redis)
+
+   status koneksi database
 
 2. **Backend 2 (Python Flask API)**  
    Instansi kedua backend untuk load balancing, menjalankan fungsi yang sama dengan backend1.
@@ -25,7 +32,7 @@ Load Balancer + 2 Backend Instance + Redis Database (Data Persistence)
 
 ---
 
-## 🏗️ Arsitektur Sistem  
+## Arsitektur Sistem  
 Arsitektur Sistem
         ┌──────────────────────────────────────┐
         │               Client                 │
@@ -90,22 +97,6 @@ Contoh Output:
 }
 
 
-Screenshot yang harus disertakan:
-
-docker compose ps
-
-docker ps
-
-curl localhost:8080 (response berubah-ubah / load balancing)
-
-tampilan log backend & nginx
-
-volume redis (redis_data)
-
-folder project
-
-Konfigurasi
-Dockerfile (Backend)
 
 Base image: python:3.10-slim
 
@@ -142,7 +133,7 @@ redis: 6379:6379
 backend internal only (tanpa port host expose)
 
 Kendala & Solusi
-1. Backend awalnya jalan di port 3000 → Load balancer error
+1. Backend awalnya jalan di port 3000 = Load balancer error
 
 Solusi: Mengubah Flask app.run() menjadi:
 
@@ -162,3 +153,6 @@ volumes:
 4. Request tidak bergantian ke Backend1/Backend2
 
 Solusi: Memakai round_robin default pada Nginx upstream.
+
+Note:
+(Dokumentasi Lengkapnya ada Di PDF)
