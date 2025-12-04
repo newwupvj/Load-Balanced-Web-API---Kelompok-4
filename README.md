@@ -67,7 +67,10 @@ docker compose ps
    **Hasil Running**
    <img width="1263" height="248" alt="Screenshot 2025-12-04 130318" src="https://github.com/user-attachments/assets/575a715c-533e-4584-97fd-0ecc5b4a48fb" />
    
-   <img width="1263" height="248" alt="NEW OUTPUT" src="https://github.com/user-attachments/assets/714b766b-e320-4663-bf39-9dd789021107" />
+   <img width="1901" height="617" alt="Screenshot 2025-12-04 134525" src="https://github.com/user-attachments/assets/7da22910-010e-4647-a79f-f09462f1abaf" />
+
+
+
 
    
 
