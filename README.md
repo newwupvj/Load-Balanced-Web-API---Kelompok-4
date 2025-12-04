@@ -34,58 +34,59 @@ Load Balancer + 2 Backend Instance + Redis Database (Data Persistence)
 
 ## Arsitektur Sistem  
 Arsitektur Sistem
-        ┌──────────────────────────────────────┐
-        │               Client                 │
-        └───────────────────────┬──────────────┘
-                                │  HTTP :8080
-                                ▼
-                     ┌────────────────────┐
-                     │     NGINX LB       │
-                     │   (Reverse Proxy)  │
-                     └───────┬────────────┘
-             ┌───────────────┴───────────────┐
-             ▼                               ▼
-   ┌──────────────────┐             ┌──────────────────┐
-   │   Backend 1      │             │   Backend 2      │
-   │ Flask API :5000  │             │ Flask API :5000  │
-   └─────────┬────────┘             └─────────┬────────┘
-             │                                │
-             └──────────────┬─────────────────┘
-                            ▼
-                  ┌──────────────────┐
-                  │      Redis        │
-                  │  DB :6379         │
-                  └──────────────────┘
+                ┌──────────────────────────────────────┐
+                │               Client                 │
+                └───────────────────────┬──────────────┘
+                                        │  HTTP :8080
+                                        ▼
+                             ┌──────────────────────┐
+                             │      NGINX LB        │
+                             │   (Reverse Proxy)    │
+                             └─────────┬────────────┘
+                     ┌───────────────┬┴┬───────────────┐
+                     ▼               │ │               ▼
+            ┌──────────────────┐     │ │     ┌──────────────────┐
+            │    Backend 1     │     │ │     │    Backend 2     │
+            │  Flask API:5000  │     │ │     │  Flask API:5000  │
+            └─────────┬────────┘     │ │     └─────────┬────────┘
+                      │              │ │              │
+                      └──────────────┴─┴──────────────┘
+                                     ▼
+                          ┌──────────────────────┐
+                          │        Redis         │
+                          │     DB : 6379        │
+                          └──────────────────────┘
 
-Cara Menjalankan
 
-Build image backend:
+**Cara Menjalankan**
+
+**Build image backend:**
 
 docker build -t backend-app .
 
 
-Jalankan semua service:
+**Jalankan semua service:**
 
 docker compose up -d
 
 
-Cek container berjalan:
+**Cek container berjalan:**
 
 docker compose ps
 
 
-Melihat log:
+**Melihat log:**
 
 docker compose logs nginx
 docker compose logs backend1
 docker compose logs backend2
 
 
-Tes aplikasi:
+**Tes aplikasi:**
 
 curl http://localhost:8080
 
-Hasil Running
+**Hasil Running**
 
 Contoh Output:
 
@@ -98,61 +99,61 @@ Contoh Output:
 
 
 
-Base image: python:3.10-slim
+   Base image: python:3.10-slim
 
-Install dependency Flask + Redis client
+   Install dependency Flask + Redis client
 
-Copy source code
+   Copy source code
 
-Expose port 5000
+   Expose port 5000
 
-CMD menjalankan app.py
+   CMD menjalankan app.py
 
-docker-compose.yml
+   docker-compose.yml
 
-Service:
+   **Service:**
 
-backend1: membangun dari Dockerfile backend
+   backend1: membangun dari Dockerfile backend
 
-backend2: instance kedua backend
+   backend2: instance kedua backend
 
-redis: database, menggunakan volume redis_data:/data untuk persistence
+   redis: database, menggunakan volume redis_data:/data untuk persistence
 
-nginx: reverse proxy & load balancer
+   nginx: reverse proxy & load balancer
 
-Konfigurasi lain:
+   Konfigurasi lain:
 
-Semua service berada pada 1 internal network
+   Semua service berada pada 1 internal network
 
-Port mapping:
+   Port mapping:
 
-nginx: 8080:80
+   nginx: 8080:80
 
-redis: 6379:6379
+   redis: 6379:6379
 
-backend internal only (tanpa port host expose)
+   backend internal only (tanpa port host expose)
 
-Kendala & Solusi
-1. Backend awalnya jalan di port 3000 = Load balancer error
+**Kendala & Solusi**
+   1. Backend awalnya jalan di port 3000 = Load balancer error
 
-Solusi: Mengubah Flask app.run() menjadi:
+   Solusi: Mengubah Flask app.run() menjadi:
 
-app.run(host="0.0.0.0", port=5000)
+   app.run(host="0.0.0.0", port=5000)
 
-2. Nginx 502 Bad Gateway
+   2. Nginx 502 Bad Gateway
 
-Solusi: Memastikan upstream memakai nama service Docker Compose (backend1:5000, backend2:5000).
+   Solusi: Memastikan upstream memakai nama service Docker Compose (backend1:5000, backend2:5000).
 
-3. Redis tidak persistent
+   3. Redis tidak persistent
 
-Solusi: Menambahkan volume:
+   Solusi: Menambahkan volume:
 
-volumes:
-  redis_data:
+   volumes:
+     redis_data:
 
-4. Request tidak bergantian ke Backend1/Backend2
+   4. Request tidak bergantian ke Backend1/Backend2
 
-Solusi: Memakai round_robin default pada Nginx upstream.
+   Solusi: Memakai round_robin default pada Nginx upstream.
 
-Note:
-(Dokumentasi Lengkapnya ada Di PDF)
+   Note:
+   (Dokumentasi Lengkapnya ada Di PDF)
